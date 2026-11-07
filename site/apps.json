@@ -1,0 +1,56 @@
+[
+  {
+    "id": "kosmos",
+    "name": "KOSMOS",
+    "subtitle": "Convergência Cósmica",
+    "tagline": "RPG de horror cósmico em três eixos: Urbano, Medieval e Espacial.",
+    "description": "KOSMOS é um RPG de horror cósmico em que três mundos — o Urbano, o Medieval e o Espacial — levam ao mesmo ponto: o Lime.\n\nCada eixo funciona como um jogo completo por si só. Não existe mestre: o jogo decide a dificuldade, as consequências e o que destrava. Quem gosta de línguas encontra uma camada extra de profundidade; quem não liga joga normalmente.",
+    "category": "Jogos",
+    "publisher": "Lingua-Byte",
+    "repo": "Lingua-Byte/kosmos",
+    "icon": "icons/kosmos.png",
+    "color": "#1b1f4a",
+    "emoji": "🌌",
+    "featured": true
+  },
+  {
+    "id": "nexi",
+    "name": "NEXI",
+    "subtitle": "Sua criatura digital",
+    "tagline": "Uma criatura digital que aprende com a sua rotina.",
+    "description": "Cuide do NEXI: dê comida, brinque, dê banho e deixe-o descansar. Ele reage ao jeito como você cuida e guarda lembranças das suas rotinas.\n\nTem minijogos (corrida, esconde-esconde e reflexos), recordes salvos no aparelho e novas gerações. Funciona direto no navegador e pode ser instalado na tela inicial.",
+    "category": "Jogos",
+    "publisher": "Lingua-Byte",
+    "repo": "Lingua-Byte/Nexi",
+    "releases": false,
+    "web": "https://lingua-byte.github.io/Nexi/",
+    "color": "#66783a",
+    "emoji": "🐰"
+  },
+  {
+    "id": "caderno",
+    "name": "Caderno",
+    "subtitle": "App pessoal",
+    "tagline": "App pessoal com atualização por pacote.",
+    "description": "Um app pessoal. Em breve disponível para download.",
+    "category": "Apps",
+    "publisher": "Lingua-Byte",
+    "repo": "Lingua-Byte/caderno-app",
+    "releases": false,
+    "color": "#7c3aed",
+    "emoji": "📓"
+  },
+  {
+    "id": "loja",
+    "name": "Lingua Store",
+    "subtitle": "Esta loja, em app",
+    "tagline": "A loja como aplicativo Android, com atualização automática.",
+    "description": "Instale a loja no seu Android e tenha todos os apps e jogos num só lugar.\n\nO conteúdo da loja se atualiza sozinho. Para receber também as novas versões do próprio app, adicione o repositório ao Obtainium.",
+    "category": "Apps",
+    "publisher": "Lingua-Byte",
+    "repo": "Lingua-Byte/loja",
+    "icon": "icons/icone-512.png",
+    "color": "#0067c0",
+    "emoji": "🛍️"
+  }
+]

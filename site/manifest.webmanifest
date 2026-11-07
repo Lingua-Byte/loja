@@ -1,0 +1,15 @@
+{
+  "name": "Lingua Store",
+  "short_name": "Lingua Store",
+  "description": "Meus apps e jogos, sempre atualizados.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#202020",
+  "theme_color": "#202020",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icons/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

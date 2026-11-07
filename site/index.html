@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f3f3">
+<title>Lingua Store</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icone-192.png">
+<link rel="apple-touch-icon" href="icons/icone-192.png">
+<style>
+  :root {
+    --bg:#f3f3f3; --rail:#ececec; --card:#fbfbfb; --card2:#ffffff; --line:rgba(0,0,0,.08);
+    --txt:#1b1b1b; --mut:#5f5f5f; --acc:#0067c0; --acc2:#005a9e; --onacc:#fff; --hover:rgba(0,0,0,.05);
+    --shadow:0 2px 6px rgba(0,0,0,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#202020; --rail:#1b1b1b; --card:#2b2b2b; --card2:#323232; --line:rgba(255,255,255,.08);
+            --txt:#ffffff; --mut:#b4b4b4; --acc:#60cdff; --acc2:#4cc2f5; --onacc:#001a2b; --hover:rgba(255,255,255,.07);
+            --shadow:0 2px 8px rgba(0,0,0,.4); }
+    meta[name=theme-color]{ content:#202020 }
+  }
+  * { box-sizing:border-box; margin:0; }
+  html,body { height:100%; }
+  body { background:var(--bg); color:var(--txt); font-family:"Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  button { font:inherit; color:inherit; cursor:pointer; }
+  a { color:inherit; }
+
+  .shell { display:grid; grid-template-columns:76px 1fr; min-height:100%; }
+  /* ---- rail ---- */
+  .rail { background:var(--rail); border-right:1px solid var(--line); display:flex; flex-direction:column; gap:4px;
+          align-items:center; padding:14px 8px; position:sticky; top:0; height:100vh; }
+  .rail .logo { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#0067c0,#4cc2f5);
+                display:grid; place-items:center; color:#fff; margin-bottom:12px; font-weight:700; }
+  .nv { width:60px; padding:9px 0 7px; border:0; background:none; border-radius:8px; display:flex; flex-direction:column;
+        align-items:center; gap:4px; font-size:.68rem; color:var(--mut); position:relative; }
+  .nv:hover { background:var(--hover); }
+  .nv svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .nv.on { color:var(--txt); background:var(--hover); font-weight:600; }
+  .nv.on::before { content:""; position:absolute; left:-8px; top:12px; bottom:12px; width:3px; border-radius:3px; background:var(--acc); }
+
+  /* ---- main ---- */
+  main { min-width:0; padding:0 0 60px; }
+  .topbar { position:sticky; top:0; z-index:20; display:flex; justify-content:center; padding:14px 24px;
+            background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+  .search { position:relative; width:min(560px,100%); }
+  .search input { width:100%; height:40px; border-radius:20px; border:1px solid var(--line); border-bottom:2px solid var(--line);
+                  background:var(--card2); color:var(--txt); padding:0 16px 0 42px; font:inherit; outline:none; box-shadow:var(--shadow); }
+  .search input:focus { border-bottom-color:var(--acc); }
+  .search svg { position:absolute; left:14px; top:11px; width:18px; height:18px; stroke:var(--mut); fill:none; stroke-width:2; stroke-linecap:round; }
+  .wrap { padding:6px 32px 0; max-width:1180px; margin:0 auto; }
+
+  /* ---- hero ---- */
+  .hero { position:relative; border-radius:12px; overflow:hidden; min-height:300px; display:flex; align-items:flex-end; color:#fff;
+          box-shadow:var(--shadow); margin:8px 0 34px; }
+  .hero::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.15) 70%); }
+  .hero .art { position:absolute; right:6%; top:50%; transform:translateY(-50%); width:210px; height:210px; border-radius:46px;
+               display:grid; place-items:center; font-size:6rem; box-shadow:0 26px 60px rgba(0,0,0,.5); overflow:hidden; z-index:1; }
+  .hero .art img { width:100%; height:100%; object-fit:cover; }
+  .hero .txt { position:relative; z-index:2; padding:34px; max-width:560px; }
+  .kicker { font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; opacity:.85; font-weight:600; }
+  .hero h1 { font-size:2.5rem; font-weight:700; letter-spacing:-.02em; margin:6px 0 8px; line-height:1.05; }
+  .hero p { opacity:.9; line-height:1.45; margin-bottom:20px; }
+
+  /* ---- buttons ---- */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:34px; padding:0 18px; border-radius:4px; border:1px solid transparent;
+         background:var(--acc); color:var(--onacc); font-weight:600; font-size:.88rem; text-decoration:none; white-space:nowrap; }
+  .btn:hover { background:var(--acc2); }
+  .btn.lg { height:40px; padding:0 26px; font-size:.95rem; }
+  .btn.ghost { background:var(--card2); color:var(--txt); border-color:var(--line); }
+  .btn.ghost:hover { background:var(--hover); }
+  .btn.dis { background:var(--hover); color:var(--mut); pointer-events:none; }
+  .hero .btn.ghost { background:rgba(255,255,255,.18); color:#fff; border-color:rgba(255,255,255,.3); backdrop-filter:blur(6px); }
+
+  /* ---- sections / cards ---- */
+  .sh { display:flex; align-items:center; justify-content:space-between; margin:6px 0 14px; }
+  .sh h2 { font-size:1.25rem; font-weight:600; letter-spacing:-.01em; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; margin-bottom:34px; }
+  .cardapp { display:flex; align-items:center; gap:14px; padding:14px; border-radius:8px; background:var(--card); border:1px solid var(--line);
+             cursor:pointer; text-align:left; transition:background .15s, transform .1s; box-shadow:var(--shadow); }
+  .cardapp:hover { background:var(--card2); } .cardapp:active { transform:scale(.99); }
+  .ic { width:64px; height:64px; border-radius:14px; flex:none; display:grid; place-items:center; font-size:2rem; overflow:hidden; color:#fff;
+        box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  .ic img { width:100%; height:100%; object-fit:cover; }
+  .cardapp .info { flex:1; min-width:0; }
+  .cardapp .nm { font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cardapp .ct { color:var(--mut); font-size:.8rem; margin-top:2px; }
+  .cardapp .tg { color:var(--mut); font-size:.78rem; margin-top:6px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+  .cardapp .btn { height:30px; padding:0 16px; }
+
+  .tiles { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(210px,1fr); gap:12px; overflow-x:auto; padding-bottom:10px; margin-bottom:30px; scrollbar-width:thin; }
+  .tile { border-radius:10px; overflow:hidden; border:1px solid var(--line); background:var(--card); cursor:pointer; text-align:left; padding:0; box-shadow:var(--shadow); }
+  .tile .cv { height:120px; display:grid; place-items:center; position:relative; }
+  .tile .cv .ic { width:72px; height:72px; }
+  .tile .bd { padding:12px 14px 14px; }
+  .tile .nm { font-weight:600; } .tile .ct { color:var(--mut); font-size:.8rem; margin-top:2px; }
+
+  /* ---- detail ---- */
+  .back { display:inline-flex; align-items:center; gap:8px; height:34px; padding:0 12px 0 8px; border:0; background:none; border-radius:6px; margin:6px 0 10px; color:var(--txt); }
+  .back:hover { background:var(--hover); }
+  .back svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .dhead { display:flex; gap:24px; align-items:flex-start; padding:10px 0 24px; flex-wrap:wrap; }
+  .dhead .ic { width:120px; height:120px; border-radius:26px; font-size:3.6rem; }
+  .dhead .mt { flex:1; min-width:240px; }
+  .dhead h1 { font-size:1.9rem; font-weight:700; letter-spacing:-.02em; }
+  .dhead .sub { color:var(--mut); margin-top:2px; }
+  .dhead .pub { color:var(--acc); font-size:.88rem; margin-top:8px; display:block; text-decoration:none; }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .stats { display:flex; gap:0; border:1px solid var(--line); border-radius:8px; background:var(--card); margin-bottom:26px; overflow:hidden; flex-wrap:wrap; }
+  .stat { flex:1; min-width:120px; padding:14px 18px; border-right:1px solid var(--line); }
+  .stat:last-child { border-right:0; }
+  .stat b { display:block; font-size:1.05rem; } .stat small { color:var(--mut); font-size:.78rem; }
+  .cols { display:grid; grid-template-columns:1fr 320px; gap:32px; align-items:start; }
+  .tabs { display:flex; gap:20px; border-bottom:1px solid var(--line); margin-bottom:18px; }
+  .tabs span { padding:8px 2px; font-weight:600; position:relative; }
+  .tabs span::after { content:""; position:absolute; left:0; right:0; bottom:-1px; height:3px; border-radius:3px; background:var(--acc); }
+  .desc { line-height:1.65; white-space:pre-line; color:var(--txt); }
+  .box { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:16px; margin-bottom:14px; }
+  .box h3 { font-size:1rem; margin-bottom:10px; }
+  .kv { display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-top:1px solid var(--line); font-size:.88rem; }
+  .kv:first-of-type { border-top:0; } .kv span:first-child { color:var(--mut); } .kv span:last-child { text-align:right; }
+  .upd p { color:var(--mut); font-size:.86rem; line-height:1.5; margin-bottom:12px; }
+  .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%) translateY(20px); background:var(--txt); color:var(--bg); padding:10px 18px;
+           border-radius:8px; font-size:.88rem; opacity:0; pointer-events:none; transition:.25s; z-index:60; }
+  .toast.show { opacity:1; transform:translateX(-50%); }
+  .empty { color:var(--mut); padding:40px 0; text-align:center; }
+  .sk { height:84px; border-radius:8px; background:linear-gradient(100deg,var(--card) 30%,var(--card2) 50%,var(--card) 70%); background-size:200% 100%; animation:sk 1.3s infinite; }
+  @keyframes sk { to { background-position:-200% 0; } }
+
+  /* ---- mobile ---- */
+  @media (max-width:760px) {
+    .shell { grid-template-columns:1fr; }
+    .rail { position:fixed; bottom:0; left:0; right:0; top:auto; height:auto; flex-direction:row; justify-content:space-around;
+            border-right:0; border-top:1px solid var(--line); padding:6px 8px calc(6px + env(safe-area-inset-bottom)); z-index:40; }
+    .rail .logo { display:none; }
+    .nv { flex:1; width:auto; } .nv.on::before { left:30%; right:30%; top:-6px; bottom:auto; width:auto; height:3px; }
+    main { padding-bottom:100px; }
+    .wrap { padding:0 16px; }
+    .topbar { padding:12px 16px; }
+    .hero { min-height:340px; } .hero .art { right:50%; top:34px; transform:translateX(50%); width:120px; height:120px; border-radius:28px; font-size:3.4rem; }
+    .hero .txt { padding:22px; } .hero h1 { font-size:1.9rem; }
+    .hero::after { background:linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,.1) 75%); }
+    .cols { grid-template-columns:1fr; }
+    .dhead .ic { width:92px; height:92px; font-size:2.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="rail" id="rail">
+    <div class="logo">L</div>
+    <button class="nv on" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Início</button>
+    <button class="nv" data-v="apps"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Apps</button>
+    <button class="nv" data-v="games"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.2 2L15 13H9l-1.8 2A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4zM8 10.5v3M6.5 12h3M16 11h.01M18 13h.01"/></svg>Jogos</button>
+  </nav>
+
+  <main>
+    <div class="topbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="q" type="search" placeholder="Pesquisar apps e jogos" autocomplete="off">
+      </label>
+    </div>
+    <div class="wrap" id="view"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORE_NAME = 'Lingua Store';
+const DEMO = false; // a prévia usa true (dados fictícios de Release)
+document.title = STORE_NAME;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mb = n => n ? (n / 1048576 >= 10 ? Math.round(n / 1048576) : (n / 1048576).toFixed(1)) + ' MB' : '—';
+const fdate = d => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
+
+let apps = [], view = 'home', query = '';
+
+/* ---------- dados ---------- */
+async function releaseOf(app) {
+  if (DEMO && app.id === 'kosmos') {
+    return { tag:'apps', published:'2026-11-07T12:00:00Z', assets:[
+      {name:'KOSMOS.apk', size:29*1048576, url:'#'},
+      {name:'KOSMOS-instalador.exe', size:84*1048576, url:'#'},
+      {name:'KOSMOS-portatil.exe', size:96*1048576, url:'#'} ] };
+  }
+  if (app.releases === false || !app.repo) return null;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${app.repo}/releases/latest`);
+    if (!r.ok) return null;
+    const j = await r.json();
+    return { tag:j.tag_name, published:j.published_at,
+             assets:(j.assets || []).map(a => ({ name:a.name, size:a.size, url:a.browser_download_url })) };
+  } catch { return null; }
+}
+
+function downloads(app) {
+  const out = [], rel = app.rel;
+  if (rel) {
+    const apk = rel.assets.find(a => /\.apk$/i.test(a.name));
+    const exes = rel.assets.filter(a => /\.exe$/i.test(a.name));
+    const inst = exes.find(a => /instalador|setup/i.test(a.name)) || exes[0];
+    if (apk) out.push({ label:'Android', verb:'Baixar para Android', ...apk });
+    if (inst) out.push({ label:'Windows', verb:'Baixar para Windows', ...inst });
+    const port = exes.find(a => a !== inst);
+    if (port) out.push({ label:'Windows (portátil)', verb:'Versão portátil', ...port, secondary:true });
+  }
+  if (app.web) out.push({ label:'Navegador', verb:'Abrir no navegador', url:app.web, size:0, web:true });
+  return out;
+}
+const platforms = app => [...new Set(downloads(app).filter(d => !d.secondary).map(d => d.label))];
+const versionOf = app => {
+  const r = app.rel; if (!r) return app.web ? 'Sempre a mais recente' : 'Em breve';
+  return /^v?\d/.test(r.tag) ? r.tag : 'Atualizado em ' + fdate(r.published);
+};
+
+/* ---------- peças ---------- */
+function icon(app, cls = '') {
+  const bg = `background:linear-gradient(135deg,${app.color || '#555'},color-mix(in srgb,${app.color || '#555'} 55%,#000))`;
+  return `<div class="ic ${cls}" style="${bg}">${app.icon ? `<img src="${esc(app.icon)}" alt="" onerror="this.remove()">` : ''}${app.icon ? '' : esc(app.emoji || app.name[0])}</div>`;
+}
+function getBtn(app, big = false) {
+  const d = downloads(app).filter(x => !x.secondary);
+  if (!d.length) return `<span class="btn dis ${big ? 'lg' : ''}">Em breve</span>`;
+  if (!big && d.length > 1) return `<span class="btn">Obter</span>`;
+  return `<a class="btn ${big ? 'lg' : ''}" href="${esc(d[0].url)}" ${d[0].web ? 'target="_blank" rel="noopener"' : ''} onclick="event.stopPropagation()">${big ? esc(d[0].verb) : 'Obter'}</a>`;
+}
+function card(app) {
+  return `<div class="cardapp" role="button" tabindex="0" data-id="${esc(app.id)}">
+    ${icon(app)}
+    <div class="info"><div class="nm">${esc(app.name)}</div><div class="ct">${esc(app.category)}${platforms(app).length ? ' · ' + esc(platforms(app).join(', ')) : ''}</div><div class="tg">${esc(app.tagline)}</div></div>
+    ${getBtn(app)}</div>`;
+}
+function tile(app) {
+  return `<button class="tile" data-id="${esc(app.id)}"><div class="cv" style="background:linear-gradient(135deg,${app.color},color-mix(in srgb,${app.color} 50%,#000))">${icon(app)}</div>
+    <div class="bd"><div class="nm">${esc(app.name)}</div><div class="ct">${esc(app.category)}</div></div></button>`;
+}
+
+/* ---------- telas ---------- */
+function filtered() {
+  const q = query.trim().toLowerCase();
+  return apps.filter(a => (view === 'apps' ? a.category === 'Apps' : view === 'games' ? a.category === 'Jogos' : true) &&
+    (!q || (a.name + ' ' + a.subtitle + ' ' + a.tagline + ' ' + a.category).toLowerCase().includes(q)));
+}
+function home() {
+  const q = query.trim();
+  const list = filtered();
+  if (q || view !== 'home') {
+    return `<div class="sh"><h2>${q ? `Resultados para “${esc(q)}”` : view === 'apps' ? 'Apps' : 'Jogos'}</h2></div>` +
+      (list.length ? `<div class="grid">${list.map(card).join('')}</div>` : '<p class="empty">Nenhum resultado.</p>');
+  }
+  const f = apps.find(a => a.featured) || apps[0];
+  const bg = `background:linear-gradient(135deg,${f.color},color-mix(in srgb,${f.color} 40%,#000))`;
+  return `<section class="hero" style="${bg}">
+      ${icon(f, 'art')}
+      <div class="txt"><div class="kicker">Em destaque · ${esc(f.category)}</div><h1>${esc(f.name)}</h1><p>${esc(f.tagline)}</p>
+        <a class="btn lg" href="#/app/${esc(f.id)}">${downloads(f).length ? 'Obter' : 'Ver detalhes'}</a>
+        <a class="btn lg ghost" href="#/app/${esc(f.id)}">Saiba mais</a></div></section>
+    <div class="sh"><h2>Descobrir</h2></div><div class="tiles">${apps.map(tile).join('')}</div>
+    <div class="sh"><h2>Todos os apps</h2></div><div class="grid">${apps.map(card).join('')}</div>`;
+}
+function detail(id) {
+  const a = apps.find(x => x.id === id);
+  if (!a) return '<p class="empty">App não encontrado.</p>';
+  const d = downloads(a), main = d.filter(x => !x.secondary);
+  const sizes = d.filter(x => x.size).map(x => `${x.label}: ${mb(x.size)}`);
+  const repoUrl = a.repo ? `https://github.com/${a.repo}` : '';
+  return `<button class="back" onclick="location.hash='#/'"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Voltar</button>
+    <div class="dhead">${icon(a)}
+      <div class="mt"><h1>${esc(a.name)}</h1><div class="sub">${esc(a.subtitle || a.tagline)}</div>
+        <a class="pub" href="https://github.com/${esc(a.publisher)}" target="_blank" rel="noopener">${esc(a.publisher)}</a>
+        <div class="sub" style="margin-top:6px">${esc(a.category)} · Gratuito</div>
+        <div class="actions">
+          ${main.length ? main.map((x, i) => `<a class="btn lg ${i ? 'ghost' : ''}" href="${esc(x.url)}" ${x.web ? 'target="_blank" rel="noopener"' : ''}>${esc(x.verb)}</a>`).join('') : '<span class="btn lg dis">Em breve</span>'}
+          ${d.filter(x => x.secondary).map(x => `<a class="btn lg ghost" href="${esc(x.url)}">${esc(x.verb)}</a>`).join('')}
+        </div></div></div>
+    <div class="stats">
+      <div class="stat"><b>${esc(versionOf(a))}</b><small>Versão</small></div>
+      <div class="stat"><b>${esc(platforms(a).join(' · ') || '—')}</b><small>Plataformas</small></div>
+      <div class="stat"><b>${main.find(x => x.size) ? esc(mb(main.find(x => x.size).size)) : '—'}</b><small>Tamanho</small></div>
+      <div class="stat"><b>Gratuito</b><small>Preço</small></div></div>
+    <div class="cols"><div>
+        <div class="tabs"><span>Visão geral</span></div>
+        <p class="desc">${esc(a.description)}</p></div>
+      <aside>
+        <div class="box"><h3>Informações adicionais</h3>
+          <div class="kv"><span>Publicado por</span><span>${esc(a.publisher)}</span></div>
+          <div class="kv"><span>Categoria</span><span>${esc(a.category)}</span></div>
+          <div class="kv"><span>Atualizado em</span><span>${a.rel ? fdate(a.rel.published) : '—'}</span></div>
+          ${sizes.map(s => `<div class="kv"><span>${esc(s.split(': ')[0])}</span><span>${esc(s.split(': ')[1])}</span></div>`).join('')}
+          ${repoUrl ? `<div class="kv"><span>Código-fonte</span><span><a href="${esc(repoUrl)}" target="_blank" rel="noopener" style="color:var(--acc)">GitHub</a></span></div>` : ''}</div>
+        ${a.rel && d.some(x => x.label === 'Android') ? `<div class="box upd"><h3>Atualização automática</h3>
+          <p>No Android, adicione este app ao Obtainium para receber novas versões sozinho.</p>
+          <button class="btn ghost" onclick="copyRepo('${esc(repoUrl)}')">Copiar link do repositório</button></div>` : ''}
+      </aside></div>`;
+}
+function copyRepo(u) {
+  (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => toast('Link copiado'), () => toast(u));
+}
+function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 1800); }
+
+/* ---------- roteamento ---------- */
+function route() {
+  const m = location.hash.match(/^#\/app\/(.+)$/);
+  $('#view').innerHTML = m ? detail(decodeURIComponent(m[1])) : home();
+  if (m) scrollTo(0, 0);
+  document.querySelectorAll('.nv').forEach(b => b.classList.toggle('on', !m && b.dataset.v === view));
+}
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-id]');
+  if (c && !e.target.closest('a')) location.hash = '#/app/' + encodeURIComponent(c.dataset.id);
+});
+document.getElementById('rail').addEventListener('click', e => {
+  const b = e.target.closest('.nv'); if (!b) return;
+  view = b.dataset.v; query = ''; $('#q').value = '';
+  if (location.hash.startsWith('#/app/')) location.hash = '#/'; else route();
+});
+$('#q').addEventListener('input', e => {
+  query = e.target.value;
+  if (location.hash.startsWith('#/app/')) location.hash = '#/'; else route();
+});
+addEventListener('hashchange', route);
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+(async () => {
+  const base = await (await fetch('apps.json')).json();
+  apps = await Promise.all(base.map(async a => ({ ...a, rel: await releaseOf(a) })));
+  route();
+})();
+</script>
+</body>
+</html>

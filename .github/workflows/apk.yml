@@ -1,0 +1,93 @@
+# Compila, assina e publica o APK da loja em
+# https://github.com/Lingua-Byte/loja/releases/latest   (arquivo: Loja.apk)
+# O app abre a loja publicada (Pages), então mudar a loja NÃO exige gerar APK novo:
+# só rode isto de novo se mudar o ícone, o nome ou a pasta app-android/.
+# Requer os 4 segredos criados por ./configurar-chave.sh (a chave precisa ser sempre a mesma).
+# Para rodar: aba Actions → "APK da loja" → Run workflow.
+
+name: APK da loja
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "app-android/**"
+      - ".github/workflows/apk.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir chave de assinatura
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KS" ]; then
+            echo "::error::Faltam os segredos da chave. Rode ./configurar-chave.sh uma vez (veja o README)."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Projeto Android
+        working-directory: app-android
+        run: |
+          mkdir -p www
+          cp ../site/index.html ../site/apps.json www/
+          cp -r ../site/icons www/icons
+          npm install
+          npx cap add android
+
+      - name: Ícone e versão
+        working-directory: app-android
+        run: |
+          res=android/app/src/main/res
+          rm -rf $res/mipmap-anydpi-v26
+          for pasta in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            cp icones/mipmap-$pasta/ic_launcher.png icones/mipmap-$pasta/ic_launcher_round.png $res/mipmap-$pasta/
+            rm -f $res/mipmap-$pasta/ic_launcher_foreground.png
+          done
+          # versionCode sempre maior a cada execução (o Android só atualiza se for maior)
+          sed -i -E "s/versionCode [0-9]+/versionCode ${{ github.run_number }}/; s/versionName \"[^\"]*\"/versionName \"1.0.${{ github.run_number }}\"/" android/app/build.gradle
+          grep -nE "versionCode|versionName" android/app/build.gradle
+
+      - name: Compilar
+        working-directory: app-android/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease
+
+      - name: Assinar
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/chave.jks"
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          UNSIGNED=$(ls app-android/android/app/build/outputs/apk/release/*.apk | head -1)
+          "$BT/zipalign" -p -f 4 "$UNSIGNED" "$RUNNER_TEMP/alinhado.apk"
+          "$BT/apksigner" sign --ks "$RUNNER_TEMP/chave.jks" --ks-pass env:KS_PASS \
+            --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASS --out Loja.apk "$RUNNER_TEMP/alinhado.apk"
+          "$BT/apksigner" verify --print-certs Loja.apk | head -3
+          rm -f "$RUNNER_TEMP/chave.jks"
+
+      - name: Publicar o Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v1.0.${{ github.run_number }}"
+          gh release create "$TAG" Loja.apk --latest --title "Lingua Store $TAG" \
+            --notes "APK assinado. No Android, permita instalar apps desconhecidos para o navegador ou o Obtainium." 

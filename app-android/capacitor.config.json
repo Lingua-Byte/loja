@@ -1,0 +1,13 @@
+{
+  "appId": "io.github.linguabyte.loja",
+  "appName": "Lingua Store",
+  "webDir": "www",
+  "server": {
+    "url": "https://lingua-byte.github.io/loja/",
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#202020"
+  },
+  "appendUserAgent": "LinguaStore-App"
+}
